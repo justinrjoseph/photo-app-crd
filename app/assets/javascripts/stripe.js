@@ -2,8 +2,6 @@ $(function() {
    
   var show_error, stripeResponseHandler, submitHandler;
   
-  $('.cc-form').on('submit', submitHandler);
-  
   submitHandler = function(e) {
     var $form = $(e.target);
     $form.find('input[type=submit]').prop('disabled', true);
@@ -17,6 +15,8 @@ $(function() {
     return false;
   }
   
+  $('.cc-form').on('submit', submitHandler);
+  
   stripeResponseHandler = function(status, response) {
     var token, $form;
     
@@ -28,11 +28,12 @@ $(function() {
       $form.find('input[type=submit]').prop('disabled', false);
     } else {
       token = response.id;
-      $form.append('<input type="hidden" name="payment[token]">').val(token);
-      $('[data-stripe=number').remove();
-      $('[data-stripe=cvv').remove();
-      $('[data-stripe=exp-month').remove();
-      $('[data-stripe=exp-year').remove();
+      $form.append($('<input type="hidden" name="payment[token]">').val(token));
+      $('[data-stripe=number]').remove();
+      $('[data-stripe=cvv]').remove();
+      $('[data-stripe=exp-month]').remove();
+      $('[data-stripe=exp-year]').remove();
+      $('[data-stripe=label]').remove();
       $form.get(0).submit();
     }
     
@@ -40,7 +41,7 @@ $(function() {
   }
   
   show_error = function(message) {
-    if ( $('#flash-messages').size < 1 ) {
+    if ( $('#flash-messages').size() < 1 ) {
       $('.container.main div:first').prepend('<div id="flash-messages"></div>');
     }
     
